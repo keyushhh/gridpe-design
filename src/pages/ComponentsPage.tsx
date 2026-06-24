@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GpButton, GpSectionLabel, GpStatusDot } from '@gridpe-app/ui';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -183,7 +184,7 @@ export function ComponentsPage({ isDark }: { isDark: boolean }) {
             ].map(({ status, label, color, shadow }) => (
               <div key={status} className="flex items-center gap-3 p-4 rounded-xl"
                 style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : '#FFFFFF', border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #E9EAEB' }}>
-                <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: color, boxShadow: `0 0 8px ${shadow}` }} />
+                <GpStatusDot status={status as any} />
                 <div>
                   <p className="text-[13px] font-medium" style={{ color: isDark ? '#FFFFFF' : '#0A0A12' }}>{label}</p>
                   <p className="text-[11px] font-mono" style={{ color: '#7E7E7E' }}>status="{status}"</p>
@@ -208,15 +209,7 @@ export function ComponentsPage({ isDark }: { isDark: boolean }) {
             { size: 'sm', label: 'ACCOUNT SETTINGS', desc: 'size="sm" — 12px / 700 / uppercase' },
           ].map(({ size, label, desc }) => (
             <div key={size}>
-              <p
-                className="font-bold font-sans uppercase tracking-widest mb-1"
-                style={{
-                  fontSize: size === 'md' ? '14px' : '12px',
-                  color: isDark ? '#7E7E7E' : 'rgba(0,0,0,0.5)',
-                }}
-              >
-                {label}
-              </p>
+              <GpSectionLabel size={size as any}>{label}</GpSectionLabel>
               <p className="text-[11px]" style={{ color: '#7E7E7E' }}>{desc}</p>
             </div>
           ))}
