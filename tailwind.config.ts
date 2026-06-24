@@ -1,0 +1,50 @@
+import type { Config } from 'tailwindcss';
+
+export default {
+  content: ['./src/**/*.{ts,tsx}', './index.html'],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Satoshi', 'system-ui', 'sans-serif'],
+      },
+      colors: {
+        brand: {
+          primary: '#5260FE',
+          'primary-light': '#6C72FF',
+          'primary-dark': '#404ECE',
+          'bg-dark': '#0A0A12',
+          'bg-light': '#F7F8FA',
+          'bg-deep': '#09090B',
+          'border-light': '#E9EAEB',
+          'border-dark': '#202020',
+          'border-mid': '#313131',
+          'card-dark': '#191919',
+          'surface-dark': '#1A1A1A',
+          'surface-mid': '#0D0D0D',
+          'text-muted': '#7E7E7E',
+          'text-dim': '#8F8F8F',
+          'text-dim2': '#666666',
+          'text-subtle': '#C4C4C4',
+          'text-placeholder': '#A4A4A4',
+          error: '#FF3B30',
+          'error-light': '#EF4444',
+          'error-dark': '#DC2626',
+          destructive: '#FF1E1E',
+          success: '#1CB956',
+          'success-vibrant': '#16B751',
+          'success-dark': '#0C7E4B',
+          'success-mid': '#0D992F',
+          warning: '#FACC15',
+          'warning-gold': '#EAB308',
+          amber: '#FF9500',
+          'pro-gold': '#CA8429',
+          'green-chart': '#22C55E',
+          'yellow-star': '#FACC15',
+          'red-cancel': '#FF1E1E',
+        },
+      },
+    },
+  },
+  plugins: [],
+} satisfies Config;
