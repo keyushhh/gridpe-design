@@ -42,12 +42,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-6 h-[64px] flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-white text-[16px]"
-                style={{ background: 'linear-gradient(135deg, #5260FE, #a78bfa)' }}
-              >
-                G
-              </div>
+              <img src="/favicon.svg" alt="Grid.Pe Logo" className="w-9 h-9" />
               <div>
                 <span className="font-bold text-[16px]">Grid.Pe</span>
                 <span
