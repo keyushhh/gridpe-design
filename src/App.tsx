@@ -14,6 +14,7 @@ const NAV_ITEMS = [
 export default function App() {
   const [activePage, setActivePage] = useState('colors');
   const [isDark, setIsDark] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className={isDark ? 'dark' : ''}>
@@ -58,7 +59,7 @@ export default function App() {
             </div>
 
             {/* Nav */}
-            <nav className="flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-1">
               {NAV_ITEMS.map((item) => (
                 <button
                   key={item.id}
@@ -76,18 +77,69 @@ export default function App() {
               ))}
             </nav>
 
-            {/* Dark mode toggle */}
-            <button
-              onClick={() => setIsDark(!isDark)}
-              className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-[18px] transition-all duration-200"
+            {/* Right Controls */}
+            <div className="flex items-center gap-2">
+              {/* Mobile Hamburger Button */}
+              <button
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
+                className="flex md:hidden w-[40px] h-[40px] rounded-full items-center justify-center transition-all duration-200"
+                style={{
+                  backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E9EAEB',
+                  color: isDark ? '#FFFFFF' : '#0A0A12',
+                }}
+              >
+                {mobileMenuOpen ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                )}
+              </button>
+
+              {/* Dark mode toggle */}
+              <button
+                onClick={() => setIsDark(!isDark)}
+                className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-[18px] transition-all duration-200"
+                style={{
+                  backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E9EAEB',
+                }}
+              >
+                {isDark ? '☀️' : '🌙'}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          {mobileMenuOpen && (
+            <div className="md:hidden border-t"
               style={{
-                backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
-                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E9EAEB',
+                backgroundColor: isDark ? 'rgba(10,10,18,0.95)' : 'rgba(247,248,250,0.95)',
+                borderColor: isDark ? 'rgba(255,255,255,0.08)' : '#E9EAEB',
               }}
             >
-              {isDark ? '☀️' : '🌙'}
-            </button>
-          </div>
+              <nav className="flex flex-col px-6 py-4 space-y-2">
+                {NAV_ITEMS.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setActivePage(item.id);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full text-left px-6 py-3 rounded-xl text-[14px] font-medium transition-all duration-200"
+                    style={{
+                      backgroundColor: activePage === item.id ? '#5260FE' : 'transparent',
+                      color: activePage === item.id
+                        ? '#FFFFFF'
+                        : isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          )}
         </header>
 
         {/* Page Content */}
