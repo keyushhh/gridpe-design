@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { GpButton, GpSectionLabel, GpStatusDot } from '@gridpe-app/ui';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -33,7 +33,7 @@ function CodeBlock({ code, isDark }: { code: string; isDark: boolean }) {
   );
 }
 
-export function ComponentsPage({ isDark }: { isDark: boolean }) {
+const ButtonPlayground = memo(function ButtonPlayground({ isDark }: { isDark: boolean }) {
   const [btnVariant, setBtnVariant] = useState<'primary' | 'secondary' | 'destructive'>('primary');
   const [btnSize, setBtnSize] = useState<'md' | 'lg'>('md');
   const [btnLoading, setBtnLoading] = useState(false);
@@ -46,10 +46,122 @@ export function ComponentsPage({ isDark }: { isDark: boolean }) {
     destructive: 'bg-[#EF4444] text-white hover:opacity-90',
   };
 
-  const handleBtnClick = () => {
+  const handleBtnClick = useCallback(() => {
     setBtnLoading(true);
     setTimeout(() => setBtnLoading(false), 2000);
-  };
+  }, []);
+
+  return (
+    <>
+      {/* Interactive playground */}
+      <div
+        className="p-6 rounded-2xl mb-4"
+        style={{
+          backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+          border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E9EAEB',
+        }}
+      >
+        <p className="text-[12px] font-bold uppercase tracking-widest mb-5" style={{ color: '#5260FE' }}>
+          ⚡ Interactive Playground
+        </p>
+
+        {/* Controls */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          {/* Variant */}
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: '#7E7E7E' }}>Variant</p>
+            <div className="flex flex-col gap-1">
+              {(['primary', 'secondary', 'destructive'] as const).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setBtnVariant(v)}
+                  className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-left transition-all"
+                  style={{
+                    backgroundColor: btnVariant === v ? '#5260FE' : isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
+                    color: btnVariant === v ? '#FFFFFF' : isDark ? '#FFFFFF' : '#0A0A12',
+                  }}
+                >{v}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* Size */}
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: '#7E7E7E' }}>Size</p>
+            <div className="flex flex-col gap-1">
+              {(['md', 'lg'] as const).map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setBtnSize(s)}
+                  className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-left transition-all"
+                  style={{
+                    backgroundColor: btnSize === s ? '#5260FE' : isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
+                    color: btnSize === s ? '#FFFFFF' : isDark ? '#FFFFFF' : '#0A0A12',
+                  }}
+                >
+                  {s === 'md' ? 'Medium (48px)' : 'Large (52px)'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Options */}
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: '#7E7E7E' }}>Options</p>
+            <div className="flex flex-col gap-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={btnFull} onChange={(e) => setBtnFull(e.target.checked)} />
+                <span className="text-[12px]" style={{ color: isDark ? '#FFFFFF' : '#0A0A12' }}>Full Width</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={btnLoading} onChange={(e) => setBtnLoading(e.target.checked)} />
+                <span className="text-[12px]" style={{ color: isDark ? '#FFFFFF' : '#0A0A12' }}>Loading</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Label */}
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: '#7E7E7E' }}>Label</p>
+            <input
+              type="text"
+              value={btnText}
+              onChange={(e) => setBtnText(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg text-[12px] bg-transparent outline-none"
+              style={{
+                border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #E9EAEB',
+                color: isDark ? '#FFFFFF' : '#0A0A12',
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Live preview */}
+        <div
+          className="p-6 rounded-xl flex items-center justify-center min-h-[100px]"
+          style={{ backgroundColor: isDark ? '#0A0A12' : '#F0F2FF' }}
+        >
+          <button
+            onClick={handleBtnClick}
+            className={`rounded-full active:scale-95 transition-all font-sans font-medium text-[16px] flex items-center justify-center ${buttonVariants[btnVariant]} ${btnFull ? 'w-full' : 'px-10'}`}
+            style={{ height: btnSize === 'md' ? '48px' : '52px' }}
+          >
+            {btnLoading ? (
+              <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+            ) : btnText}
+          </button>
+        </div>
+      </div>
+
+      <CodeBlock isDark={isDark} code={`import { GpButton } from '@/components/ui/GpButton';\n\n<GpButton\n  variant="${btnVariant}"\n  size="${btnSize}"\n  fullWidth={${btnFull}}\n  isLoading={${btnLoading}}\n  onClick={handler}\n>\n  ${btnText}\n</GpButton>`} />
+    </>
+  );
+});
+
+export function ComponentsPage({ isDark }: { isDark: boolean }) {
 
   return (
     <div>
@@ -59,110 +171,7 @@ export function ComponentsPage({ isDark }: { isDark: boolean }) {
       </p>
 
       <Section title="GpButton">
-        {/* Interactive playground */}
-        <div
-          className="p-6 rounded-2xl mb-4"
-          style={{
-            backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E9EAEB',
-          }}
-        >
-          <p className="text-[12px] font-bold uppercase tracking-widest mb-5" style={{ color: '#5260FE' }}>
-            ⚡ Interactive Playground
-          </p>
-
-          {/* Controls */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            {/* Variant */}
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: '#7E7E7E' }}>Variant</p>
-              <div className="flex flex-col gap-1">
-                {(['primary', 'secondary', 'destructive'] as const).map((v) => (
-                  <button
-                    key={v}
-                    onClick={() => setBtnVariant(v)}
-                    className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-left transition-all"
-                    style={{
-                      backgroundColor: btnVariant === v ? '#5260FE' : isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
-                      color: btnVariant === v ? '#FFFFFF' : isDark ? '#FFFFFF' : '#0A0A12',
-                    }}
-                  >{v}</button>
-                ))}
-              </div>
-            </div>
-
-            {/* Size */}
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: '#7E7E7E' }}>Size</p>
-              <div className="flex flex-col gap-1">
-                {(['md', 'lg'] as const).map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setBtnSize(s)}
-                    className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-left transition-all"
-                    style={{
-                      backgroundColor: btnSize === s ? '#5260FE' : isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
-                      color: btnSize === s ? '#FFFFFF' : isDark ? '#FFFFFF' : '#0A0A12',
-                    }}
-                  >
-                    {s === 'md' ? 'Medium (48px)' : 'Large (52px)'}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Options */}
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: '#7E7E7E' }}>Options</p>
-              <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={btnFull} onChange={(e) => setBtnFull(e.target.checked)} />
-                  <span className="text-[12px]" style={{ color: isDark ? '#FFFFFF' : '#0A0A12' }}>Full Width</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={btnLoading} onChange={(e) => setBtnLoading(e.target.checked)} />
-                  <span className="text-[12px]" style={{ color: isDark ? '#FFFFFF' : '#0A0A12' }}>Loading</span>
-                </label>
-              </div>
-            </div>
-
-            {/* Label */}
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: '#7E7E7E' }}>Label</p>
-              <input
-                type="text"
-                value={btnText}
-                onChange={(e) => setBtnText(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg text-[12px] bg-transparent outline-none"
-                style={{
-                  border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #E9EAEB',
-                  color: isDark ? '#FFFFFF' : '#0A0A12',
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Live preview */}
-          <div
-            className="p-6 rounded-xl flex items-center justify-center min-h-[100px]"
-            style={{ backgroundColor: isDark ? '#0A0A12' : '#F0F2FF' }}
-          >
-            <button
-              onClick={handleBtnClick}
-              className={`rounded-full active:scale-95 transition-all font-sans font-medium text-[16px] flex items-center justify-center ${buttonVariants[btnVariant]} ${btnFull ? 'w-full' : 'px-10'}`}
-              style={{ height: btnSize === 'md' ? '48px' : '52px' }}
-            >
-              {btnLoading ? (
-                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                </svg>
-              ) : btnText}
-            </button>
-          </div>
-        </div>
-
-        <CodeBlock isDark={isDark} code={`import { GpButton } from '@/components/ui/GpButton';\n\n<GpButton\n  variant="${btnVariant}"\n  size="${btnSize}"\n  fullWidth={${btnFull}}\n  isLoading={${btnLoading}}\n  onClick={handler}\n>\n  ${btnText}\n</GpButton>`} />
+        <ButtonPlayground isDark={isDark} />
       </Section>
 
       <Section title="GpStatusDot">

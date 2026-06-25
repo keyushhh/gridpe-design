@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 const colorTokens = [
   { token: 'brand-primary', hex: '#5260FE', label: 'Primary' },
@@ -125,17 +125,19 @@ export function ColorsPage({ isDark }: { isDark: boolean }) {
   const [format, setFormat] = useState<CopyFormat>('hex');
   const [search, setSearch] = useState('');
 
-  const tokenMap = Object.fromEntries(colorTokens.map((t) => [t.token, t]));
+  const tokenMap = useMemo(() => Object.fromEntries(colorTokens.map((t) => [t.token, t])), []);
 
-  const filteredGroups = groups.map((g) => ({
-    ...g,
-    tokens: g.tokens.filter((t) => {
-      const token = tokenMap[t];
-      if (!token) return false;
-      const q = search.toLowerCase();
-      return token.label.toLowerCase().includes(q) || token.hex.toLowerCase().includes(q) || token.token.toLowerCase().includes(q);
-    }),
-  })).filter((g) => g.tokens.length > 0);
+  const filteredGroups = useMemo(() => {
+    return groups.map((g) => ({
+      ...g,
+      tokens: g.tokens.filter((t) => {
+        const token = tokenMap[t];
+        if (!token) return false;
+        const q = search.toLowerCase();
+        return token.label.toLowerCase().includes(q) || token.hex.toLowerCase().includes(q) || token.token.toLowerCase().includes(q);
+      }),
+    })).filter((g) => g.tokens.length > 0);
+  }, [search, tokenMap]);
 
   return (
     <div>

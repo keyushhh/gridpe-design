@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { ColorsPage } from './pages/ColorsPage';
 import { TypographyPage } from './pages/TypographyPage';
 import { ComponentsPage } from './pages/ComponentsPage';
@@ -10,6 +10,17 @@ const NAV_ITEMS = [
   { id: 'components', label: '⚡ Components' },
   { id: 'tokens', label: '🔧 Tokens' },
 ];
+
+const AmbientGlow = memo(function AmbientGlow() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      <div
+        className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] opacity-20"
+        style={{ backgroundColor: '#5260FE' }}
+      />
+    </div>
+  );
+});
 
 export default function App() {
   const [activePage, setActivePage] = useState('colors');
@@ -25,12 +36,7 @@ export default function App() {
         }}
       >
         {/* Ambient background glow */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-          <div
-            className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] opacity-20"
-            style={{ backgroundColor: '#5260FE' }}
-          />
-        </div>
+        <AmbientGlow />
 
         {/* Top Nav */}
         <header
